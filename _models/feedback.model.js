@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const schema = mongoose.Schema;
-const feedback = new schema({
+const { Schema } = mongoose;
+const feedbackSchema = new Schema({
     name: { type: String },
     title: { type: String },
     description: { type: String },
     thumbnail: { type: String },
-},
-    { versionKey: false, timestamps: true, });
-module.exports = mongoose.model('feedback', feedback);
+}, { versionKey: false, timestamps: true });
+
+export default mongoose.model('feedback', feedbackSchema);

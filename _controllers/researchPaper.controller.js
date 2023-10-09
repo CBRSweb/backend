@@ -1,68 +1,69 @@
-const formidable = require('formidable');
-const ObjectID = require('mongodb').ObjectId;
-const researchPaper = require('../_models/researchPaper.model');
-const cloudinary = require('../_helpers/cloudinary.helper');
+import { IncomingForm } from 'formidable';
+import { ObjectId } from 'mongodb';
+import ResearchPaper from '../_models/researchPaper.model.js';
+import { upload } from '../_helpers/cloudinary.helper.js';
 
-exports.add = (req, res) => {
-    const form = new formidable.IncomingForm();
+export const add = (req, res) => {
+    const form = new IncomingForm();
     form.parse(req, (error, fields, files) => {
         if (files.thumbnail) {
-            cloudinary.upload(files).then((uploaded) => {
-                let ins = new researchPaper({
+            upload(files).then((uploaded) => {
+                const ins = new ResearchPaper({
                     title: fields.title[0],
                     description: fields.description[0],
-                    thumbnail: uploaded
+                    thumbnail: uploaded,
                 });
                 ins.save().then((created) => {
                     if (created == null) {
                         res.status(500).json({ error: true, message: "An error occurred, Please try again." });
                     } else {
-                        res.status(201).json({ error: false, message: "Research paper successfully added.", created: created });
+                        res.status(201).json({ error: false, message: "Research paper successfully added.", created });
                     }
                 }).catch((error) => {
                     res.status(500).json({ error: true, message: "Something went wrong." });
                 });
             }).catch((error) => {
                 res.status(500).json({ error: true, message: error });
-            })
+            });
         } else {
-            res.status(500).json({ error: true, message: "Please attached file." });
+            res.status(500).json({ error: true, message: "Please attach a file." });
         }
-    })
-}
-exports.update = (req, res) => {
-    const form = new formidable.IncomingForm();
+    });
+};
+export const update = (req, res) => {
+    const form = new IncomingForm();
     form.parse(req, (error, fields, files) => {
-        researchPaper.findOne({ _id: new ObjectID(fields.id[0]) }).then((founded) => {
+        ResearchPaper.findOne({ _id: new ObjectId(fields.id[0]) }).then((founded) => {
             if (founded) {
-                let title = founded.title
-                let description = founded.description
+                let title = founded.title;
+                let description = founded.description;
+
                 if (fields.title) {
-                    title = fields.title[0]
+                    title = fields.title[0];
                 }
                 if (fields.description) {
-                    description = fields.description[0]
+                    description = fields.description[0];
                 }
                 if (files.thumbnail) {
-                    cloudinary.upload(files).then((uploaded) => {
-                        researchPaper.findOneAndUpdate({ _id: new ObjectID(fields.id[0]) }, { $set: { thumbnail: uploaded, title: title, description: description } }, { new: true }).then((updated) => {
+                    upload(files).then((uploaded) => {
+                        ResearchPaper.findOneAndUpdate({ _id: new ObjectId(fields.id[0]) }, { $set: { thumbnail: uploaded, title, description } }, { new: true }).then((updated) => {
                             if (updated == null) {
                                 res.status(500).json({ error: true, message: "Research paper not found." });
                             } else {
-                                res.status(200).json({ error: false, message: "Research paper is updated successfully.", updated: updated });
+                                res.status(200).json({ error: false, message: "Research paper is updated successfully.", updated });
                             }
                         }).catch((error) => {
                             res.status(500).json({ error: true, message: "Invalid id." });
                         });
                     }).catch((error) => {
                         res.status(500).json({ error: true, message: error });
-                    })
+                    });
                 } else {
-                    researchPaper.findOneAndUpdate({ _id: new ObjectID(fields.id[0]) }, { $set: { title: title, description: description } }, { new: true }).then((updated) => {
+                    ResearchPaper.findOneAndUpdate({ _id: new ObjectId(fields.id[0]) }, { $set: { title, description } }, { new: true }).then((updated) => {
                         if (updated == null) {
                             res.status(500).json({ error: true, message: "Research paper not found." });
                         } else {
-                            res.status(200).json({ error: false, message: "Research paper is updated successfully.", updated: updated });
+                            res.status(200).json({ error: false, message: "Research paper is updated successfully.", updated });
                         }
                     }).catch((error) => {
                         res.status(500).json({ error: true, message: "Invalid id." });
@@ -73,11 +74,11 @@ exports.update = (req, res) => {
             }
         }).catch((error) => {
             res.status(500).json({ error: true, message: "Invalid id." });
-        })
+        });
     });
-}
-exports.delete = (req, res) => {
-    researchPaper.deleteOne({ _id: new ObjectID(req.params.id) }).then((deleted) => {
+};
+export const deletePaper = (req, res) => {
+    ResearchPaper.deleteOne({ _id: new ObjectId(req.params.id) }).then((deleted) => {
         if (deleted.deletedCount > 0) {
             res.status(200).json({ error: false, message: "Research paper Deleted Successfully." });
         } else {
@@ -86,11 +87,11 @@ exports.delete = (req, res) => {
     }).catch((error) => {
         res.status(500).json({ error: true, message: "Research paper not found." });
     });
-}
-exports.getAll = (req, res) => {
-    researchPaper.find({}).sort({ createdAt: -1 }).then((found) => {
-        res.status(200).json({ error: false, message: "Find successfully", data: found })
+};
+export const getAll = (req, res) => {
+    ResearchPaper.find({}).sort({ createdAt: -1 }).then((found) => {
+        res.status(200).json({ error: false, message: "Find successfully", data: found });
     }).catch((error) => {
-        res.status(500).json({ error: true, message: "Something went wrong." })
+        res.status(500).json({ error: true, message: "Something went wrong." });
     });
-}
+};

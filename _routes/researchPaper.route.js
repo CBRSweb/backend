@@ -1,6 +1,6 @@
-const researchPaper = require('../_controllers/researchPaper.controller');
+import { add, update, deletePaper, getAll } from '../_controllers/researchPaper.controller.js';
 
-module.exports = (app) => {
+export default (app) => {
     app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Credentials', 'true');
@@ -10,8 +10,8 @@ module.exports = (app) => {
         res.header('Content-Type', 'application/json; charset=utf-8');
         next();
     });
-    app.post('/api/research/paper/add', researchPaper.add);
-    app.post('/api/research/paper/update', researchPaper.update);
-    app.delete('/api/research/paper/delete/:id', researchPaper.delete);
-    app.get('/api/research/paper/getAll/', researchPaper.getAll);
+    app.post('/api/research/paper/add', add);
+    app.post('/api/research/paper/update', update);
+    app.delete('/api/research/paper/delete/:id', deletePaper);
+    app.get('/api/research/paper/getAll/', getAll);
 }

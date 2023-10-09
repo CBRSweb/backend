@@ -1,6 +1,6 @@
-const feedback = require('../_controllers/feedback.controller');
+import { deleteFeedback, add, update, getAll } from '../_controllers/feedback.controller.js'
 
-module.exports = (app) => {
+export default (app) => {
     app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Credentials', 'true');
@@ -10,8 +10,8 @@ module.exports = (app) => {
         res.header('Content-Type', 'application/json; charset=utf-8');
         next();
     });
-    app.post('/api/feedback/add', feedback.add);
-    app.post('/api/feedback/update', feedback.update);
-    app.delete('/api/feedback/delete/:id', feedback.delete);
-    app.get('/api/feedback/getAll/', feedback.getAll);
+    app.post('/api/feedback/add', add);
+    app.post('/api/feedback/update', update);
+    app.delete('/api/feedback/delete/:id', deleteFeedback);
+    app.get('/api/feedback/getAll/', getAll);
 }
