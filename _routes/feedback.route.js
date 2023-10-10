@@ -1,4 +1,5 @@
 import { deleteFeedback, add, update, getAll } from '../_controllers/feedback.controller.js'
+import { auth } from '../_middleware/auth.middleware.js';
 
 export default (app) => {
     app.use((req, res, next) => {
@@ -10,8 +11,8 @@ export default (app) => {
         res.header('Content-Type', 'application/json; charset=utf-8');
         next();
     });
-    app.post('/api/feedback/add', add);
-    app.post('/api/feedback/update', update);
-    app.delete('/api/feedback/delete/:id', deleteFeedback);
+    app.post('/api/feedback/add', auth, add);
+    app.post('/api/feedback/update', auth, update);
+    app.delete('/api/feedback/delete/:id', auth, deleteFeedback);
     app.get('/api/feedback/getAll/', getAll);
 }

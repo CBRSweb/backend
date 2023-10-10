@@ -1,4 +1,5 @@
 import { add, update, deletePaper, getAll } from '../_controllers/researchPaper.controller.js';
+import { auth } from '../_middleware/auth.middleware.js';
 
 export default (app) => {
     app.use((req, res, next) => {
@@ -10,8 +11,8 @@ export default (app) => {
         res.header('Content-Type', 'application/json; charset=utf-8');
         next();
     });
-    app.post('/api/research/paper/add', add);
-    app.post('/api/research/paper/update', update);
-    app.delete('/api/research/paper/delete/:id', deletePaper);
+    app.post('/api/research/paper/add', auth, add);
+    app.post('/api/research/paper/update', auth, update);
+    app.delete('/api/research/paper/delete/:id', auth, deletePaper);
     app.get('/api/research/paper/getAll/', getAll);
 }
