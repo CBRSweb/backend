@@ -21,7 +21,7 @@ export const signup = (req, res) => {
                         if (created == null) {
                             res.status(500).json({ error: true, message: "An error occurred, Please try again." });
                         } else {
-                            const token = jsonwebtoken.sign({ _id: created }, 'privateKey');
+                            const token = jsonwebtoken.sign({ user: created }, 'privateKey');
                             res.status(201).json({ error: false, message: "Account created successfully.", token });
                         }
                     }).catch(error => {
@@ -43,7 +43,7 @@ export const login = (req, res) => {
             if (userFound !== null) {
                 bcryptjs.compare(fields.password[0], userFound.password).then(compared => {
                     if (compared) {
-                        const token = jsonwebtoken.sign({ _id: userFound }, 'privateKey');
+                        const token = jsonwebtoken.sign({ user: userFound }, 'privateKey');
                         res.status(200).json({ error: false, message: "Sign in successfully.", token });
                     } else {
                         res.status(500).json({ error: true, message: "Incorrect password." });

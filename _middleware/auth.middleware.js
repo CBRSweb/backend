@@ -8,7 +8,7 @@ export const auth = (req, res, next) => {
             if (error) {
                 res.status(409).json({ error: true, message: "Invalid Token." })
             } else {
-                user.findOne({ _id: new ObjectId(payload._id) }).then((userFound) => {
+                user.findOne({ _id: new ObjectId(payload.user._id) }).then((userFound) => {
                     if (userFound != null) {
                         next()
                     } else {
