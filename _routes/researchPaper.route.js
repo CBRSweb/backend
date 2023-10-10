@@ -1,4 +1,4 @@
-import { add, update, deletePaper, getAll } from '../_controllers/researchPaper.controller.js';
+import { add, update, deletePaper, getAll, getById } from '../_controllers/researchPaper.controller.js';
 import { auth } from '../_middleware/auth.middleware.js';
 
 export default (app) => {
@@ -14,5 +14,6 @@ export default (app) => {
     app.post('/api/research/paper/add', auth, add);
     app.post('/api/research/paper/update', auth, update);
     app.delete('/api/research/paper/delete/:id', auth, deletePaper);
-    app.get('/api/research/paper/getAll/', getAll);
+    app.get('/api/research/paper/getAll', getAll);
+    app.get('/api/research/paper/getById/:id', getById);
 }

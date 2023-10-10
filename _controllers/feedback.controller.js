@@ -100,3 +100,14 @@ export const getAll = (req, res) => {
         res.status(500).json({ error: true, message: "Something went wrong." });
     });
 };
+export const getById = (req, res) => {
+    feedback.findOne({ _id: new ObjectId(req.params.id) }).then((found) => {
+        if (found) {
+            res.status(200).json({ error: false, message: "Find successfully", data: found });
+        } else {
+            res.status(500).json({ error: true, message: "feedback not found." });
+        }
+    }).catch((error) => {
+        res.status(500).json({ error: true, message: "Something went wrong." });
+    });
+};
